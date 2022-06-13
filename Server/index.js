@@ -20,8 +20,9 @@ db.connect((err)=>{
 
 app.post(`/dataget`, (req, res) => {
     const name = req.body.name
+    const Email = req.body.Email
     console.log(name);
-    const sql = `call dataget("${name}")`;
+    const sql = `call dataget("${name}","${Email}")`;
     db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -32,7 +33,17 @@ app.post(`/dataget`, (req, res) => {
     })
 })
 
-
+app.get(`/join_s`, (req, res) => {
+    const sql = `call join_s()`;
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send({ message: "success", results: result[0] })
+            console.log("output", result[0]);
+        }
+    })
+})
 
 app.listen(5001,()=>{
     console.log("server running sucess")
