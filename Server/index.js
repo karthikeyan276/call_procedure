@@ -44,6 +44,17 @@ app.get(`/join_s`, (req, res) => {
         }
     })
 })
+app.get(`/left_join`, (req, res) => {
+    const sql = `call left_join()`;
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send({ message: "success", results: result[0] })
+            console.log("output", result[0]);
+        }
+    })
+})
 
 app.listen(5001,()=>{
     console.log("server running sucess")

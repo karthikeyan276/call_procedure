@@ -20,11 +20,13 @@ function Form() {
     const[name,setName]=useState("")
     const[datas,setData]=useState([])
     const [Email,setEmail]= useState("")
+    const [Left_joins,setLeftjoins]=useState([])
   
 
     const [comp,setComp]=useState([])
 
     console.log(name)
+    console.log(Left_joins)
 
     console.log(comp)
 
@@ -51,6 +53,17 @@ function Form() {
         })
       }
 
+
+      const left_joins=(e)=>{
+        e.preventDefault();
+        Axios.get(`http://localhost:5001/left_join`,{
+
+        }).then((response)=>{
+          console.log("scuess")
+          setLeftjoins(response.data.results)
+
+        })
+      }
   return (
     <div >
         {/* <TextField sx={{mt:1}} placeholder="search by name" type="text" /><br/><br/> */}
@@ -75,8 +88,10 @@ function Form() {
         {/* <TextField id="outlined-search"  label="Search Email" type="search" /><br/> */}
         <Button sx={{mt:1}} variant="contained" onClick={check_db}>Show</Button>
 
-        <Button sx={{ml:1,mt:1}} variant="contained"  onClick={compare}>same data</Button>
+        
 
+
+    
         {<Box sx={{ flexGrow: 1,mt:4 , ml:1,mr:1,mb:1}}>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {datas.map((val) => (
@@ -91,7 +106,7 @@ function Form() {
         ))}
       </Grid>
     </Box>}
-
+    <Button sx={{ml:1,mt:1}} variant="contained"  color="error" onClick={compare}>same data</Button>
     <h1>Inner Join</h1>
     {<Box sx={{ flexGrow: 1,mt:4 , ml:1,mr:1,mb:1}}>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -102,6 +117,22 @@ function Form() {
             <h4> id:{val.id}</h4>
             <h4>member:{val.member}</h4>
             <h4>PersonID:{val.PersonID}</h4>
+            </Item>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>}
+    <Button sx={{ml:1,mt:1}} variant="contained"  color="success"  onClick={left_joins} >Left Join </Button>
+
+    {<Box sx={{ flexGrow: 1,mt:4 , ml:1,mr:1,mb:1}}>
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        {Left_joins.map((val) => (
+          <Grid item xs={2} sm={6} md={6} >
+            <Item sx={{background:"lightgreen"}}>
+            <h1>LastName: {val.LastName} </h1>
+            <h4> PersonID:{val.PersonID}</h4>
+            <h4>id:{val.id}</h4>
+            <h4>name:{val.name}</h4>
             </Item>
           </Grid>
         ))}
