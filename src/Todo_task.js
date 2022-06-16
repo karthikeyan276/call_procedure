@@ -17,7 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
-function Todo_task() {
+function Todo_task(props) {
 
     const[task,setAddtask]=useState("")
     const[gettask,setgettask]=useState([])
@@ -25,12 +25,16 @@ function Todo_task() {
     const[status,setStatus]=useState([])
     const[importedn_data,setImportentdata]=useState([])
     const[update,setUpdate]=useState(true)
+    const[id_1,setId_1]=useState("")
+    const [check,setCheck]=useState([])
 
 // console.log("dsdsds",gettask)
 
 console.log("status",status)
 
 console.log("importedn_data",importedn_data)
+
+console.log("check",check)
 
 
 
@@ -40,26 +44,28 @@ const addtask_s = (e)=>{
     // window.location.reload(true);
     e.preventDefault();
     Axios.post(`http://localhost:9001/addtask`,{
-        task:task
+        task:task,
+        id_1:id_1
+
     }).then((response)=>{
         console.log("success")
         setAddtask(...task,response.data.results)
       
     })
-    setUpdate(!update)
+    
 }
 
-// const Show_task = (e)=>{
+const Show_task = (e)=>{
 
 
-//     Axios.get(`http://localhost:9001/getdata`,{
+    Axios.get(`http://localhost:9001/getdata`,{
       
-//     }).then((response)=>{
-//         console.log("success")
-//         setgettask(response.data.results)
+    }).then((response)=>{
+        console.log("success")
+        setgettask(response.data.results)
 
-//     })
-// }
+    })
+}
 
 const status_id = ()=>{
   Axios.get(`http://localhost:9001/addtask_2`,{
@@ -67,7 +73,7 @@ const status_id = ()=>{
             }).then((response)=>{
                 console.log("sucess", response.data.results)
                 // setStatus([...response.data.results])
-                setStatus(response.data.results)
+                setgettask(response.data.results)
                 
             })
             setUpdate(!update)
@@ -79,8 +85,9 @@ const updateimportent = (id)=>{
     id
   }).then((response)=>{
     console.log("updateimportent", response.data.results)
-    setStatus([...response.data.results])
-    setImportentdata(response.data.results)
+    // setStatus(response.data.results)
+    // setImportentdata(response.data.results)
+    console.log("setImportentdata",response.data.results)
     // setUpdate(!update)
 })
 }
@@ -95,14 +102,32 @@ const importent_datas = ()=>{
             })
             setUpdate(!update)
 }
+
+
+const complted = ()=>{
+  Axios.get(`http://localhost:9001/completed`,{
+
+            }).then((response)=>{
+                console.log("okkk", response.data.results)
+                // setStatus([...response.data.results])
+                // setImportentdata(response.data.results)
+                setStatus(response.data.results)
+            })
+            setUpdate(!update)
+}
+
+
+
   
 const changeto_false = (id)=>{
-  window.location.reload(true);
-  Axios.put(`http://localhost:9001/updatefalse`,{
-    id
+  // window.location.reload(true);
+  Axios.put(`http://localhost:9001/getdata`,{
+    id:id
   }).then((response)=>{
     console.log("hhh",response.data);
-    console.log(response.status);
+    console.log("kkkk",response.status);
+    // setAddtask(...response.data.results)
+   
   }).catch((e)=>console.log("plz chech the error :(",e));
 }
 
@@ -112,9 +137,9 @@ const handleChange =(id) =>{
                 id
             })
             .then((response) => {
-                console.log(response.status);
-                console.log(response.data);
-                
+                console.log("gvdgvdgvfdg",response.status);
+                console.log("yyyy",response.data.results);
+                // setCheck(response.data.results)
             })
             .catch((e) => console.log('something went wrong :(', e));
             console.log(id)
@@ -130,7 +155,7 @@ const importent = (id)=>{
   Axios.put(`http://localhost:9001/importent`,{
     id
   }).then((response)=>{
-    console.log("sucessed", response.data.results)
+    console.log("sucessedimportent", response.data.results)
     // setImportentdata([...response.data.results])
     // setImportentdata(response.data.results)
 
@@ -158,10 +183,10 @@ useEffect((e)=>{
     Axios.get(`http://localhost:9001/addtask_2`,{
       
     }).then((response)=>{
-        console.log("success")
-        setgettask([...response.data.results])
+        console.log("alldata",response.data.results)
+        setgettask([response.data.results])
         
-   
+        complted();
         status_id();
         importent();
         importent_datas()
@@ -176,9 +201,19 @@ useEffect((e)=>{
 
   return (
     <div>
+      
         <div>
 
             <TextField sx={{mt:2}}
+          id="filled-textarea"
+          label="User_id"
+          placeholder="User_id"
+          multiline
+          variant="filled"
+          color="success" 
+          onChange={(event)=>{setId_1(event.target.value)}}
+        /><br/>
+         <TextField sx={{mt:2}}
           id="filled-textarea"
           label="Add Task"
           placeholder="Add Task"
@@ -187,9 +222,11 @@ useEffect((e)=>{
           color="success" 
           onChange={(event)=>{setAddtask(event.target.value)}}
         />
+        
         </div>
+        
         <Button sx={{mt:1}} onClick={addtask_s} variant='contained' color="success">Add task</Button>
-     
+     {console.log("hhhdsds",props.name)}
 
 {
     <Box sx={{ flexGrow: 1,mt:4 , ml:1,mr:1,mb:1}}>

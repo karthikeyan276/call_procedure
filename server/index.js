@@ -19,7 +19,8 @@ const db = mysql.createConnection({
 app.post(`/addtask`,(req,res)=>{
 
     const task=req.body.task;
-    db.query(`INSERT INTO addtask (task)VALUES(?)`,[task],(err,result)=>{
+    const id= req.body.id_1
+    db.query(`INSERT INTO addtask (task,id_1)VALUES(?,?)`,[task,id],(err,result)=>{
         if(err){
             console.log(err)
         }else{
@@ -32,26 +33,10 @@ app.post(`/addtask`,(req,res)=>{
  
 })
 
-app.get(`/getdata`,(req,res)=>{
-
+// app.put(`/getdata`,(req,res)=>{
+//     const id= req.body.id
    
-    db.query(`select * from addtask where status = false`,(err,result)=>{
-        if(err){
-            console.log(err)
-        }else{
-            res.send({message:"sucess",results:result})
-        }
-    })
-    db.connect((err)=>{
-        err? console.log(err): console.log("connected")
-    })
- 
-})
-
-// app.get(`/getdata`,(req,res)=>{
-
-   
-//     db.query(`select * from addtask addtask where status = false"`,(err,result)=>{
+//     db.query(`select * from addtask where status = false`,(err,result)=>{
 //         if(err){
 //             console.log(err)
 //         }else{
@@ -63,6 +48,40 @@ app.get(`/getdata`,(req,res)=>{
 //     })
  
 // })
+
+
+app.get(`/completed`,(req,res)=>{
+
+   
+    db.query(`select * from addtask where status = true`,(err,result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.send({message:"sucess",results:result})
+        }
+    })
+    db.connect((err)=>{
+        err? console.log(err): console.log("connected")
+    })
+ 
+})
+
+app.put(`/getdata`,(req,res)=>{
+
+   const id_10 = req.body.id
+  
+    db.query(`UPDATE addtask set status = false where id = ${id_10} `,(err,result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.send({message:"sucess",results:result})
+        }
+    })
+    db.connect((err)=>{
+        err? console.log(err): console.log("connected")
+    })
+ 
+})
 
 app.get(`/addtask_2`,(req,res)=>{
 
@@ -139,9 +158,10 @@ app.get(`/importent_data`,(req,res)=>{
 
 app.put(`/updatefalse`,(req,res)=>{
 
-    const id_1 =req.body.id;
+    const id_11 =req.body.id;
+    console.log(id_11)
 
-    const mysql = `UPDATE addtask set importent = false where id = ${id_1} `
+    const mysql = `UPDATE addtask set importent = false where id = ${id_11} `
 
     db.query(mysql,(err,result)=>{
         if(err){
@@ -179,7 +199,7 @@ app.put(`/updateimportent`,(req,res)=>{
 app.delete(`/delete/:id`,(req,res)=>{
 
     const id_1 =req.params.id;
-    console.log(req.body.id)
+
 
     const mysql = `DELETE FROM addtask where id = ${id_1} `
 
@@ -196,6 +216,58 @@ app.delete(`/delete/:id`,(req,res)=>{
  
 })
 
+
+
+app.post(`/Add_list`,(req,res)=>{
+
+    const input=req.body.input;
+    db.query(`INSERT INTO list (name)VALUES(?)`,[input],(err,result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.send({message:"sucess",results:result})
+        }
+    })
+    db.connect((err)=>{
+        err? console.log(err): console.log("connected")
+    })
+ 
+})
+
+app.post(`/Add_name`,(req,res)=>{
+        const id_1=req.body.x
+    const input=req.body.input;
+    const sql = `SELECT task FROM addtask inner JOIN list ON list.id_1=addtask.id_1 WHERE addtask.id_1 =${id_1} `
+
+    db.query(sql,(err,result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.send({message:"sucess",results:result})
+        }
+    })
+    db.connect((err)=>{
+        err? console.log(err): console.log("connected")
+    })
+ 
+})
+
+app.get(`/add_listdata_1`,(req,res)=>{
+    const input = req.params.input
+   const mysql = `select * from list `
+    db.query(mysql,(err,result)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.send({message:"sucess",results:result})
+            console.log(result)
+        }
+    })
+    db.connect((err)=>{
+        err? console.log(err): console.log("connected")
+    })
+ 
+})
 
 app.listen(9001,()=>{
     console.log("server running port 9001")
